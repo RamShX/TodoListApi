@@ -20,11 +20,12 @@ namespace TodoListApi
             builder.Services.AddSwaggerGen();
             
             builder.Services.AddControllers();
+            //Establecer la conexión a la base de datos
             builder.Services.AddDbContext<TodoListContext> (options => options.UseMySQL(builder.Configuration.GetConnectionString("appDBConnection"))
             );
 
             builder.Services.AddScoped<IUser, UserService>();
-            builder.Services.AddScoped<ITask, TaskService>();
+            builder.Services.AddScoped<ITask, TodoTaskService>();
 
             var app = builder.Build();
 

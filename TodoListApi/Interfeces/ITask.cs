@@ -1,7 +1,9 @@
-﻿namespace TodoListApi.Interfeces
+﻿using TodoListApi.Models;
+
+namespace TodoListApi.Interfeces
 {
     public interface ITask
     {
-        List<Task> GetTasks();
+        List<TodoTasks> GetTasks();
     }
 }

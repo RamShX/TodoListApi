@@ -5,11 +5,11 @@ namespace TodoListApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskController : ControllerBase
+    public class TodoTasksController : ControllerBase
     {
         private ITask taskServices;
 
-        public TaskController(ITask task)
+        public TodoTasksController(ITask task)
         {
             this.taskServices = task;
         }
