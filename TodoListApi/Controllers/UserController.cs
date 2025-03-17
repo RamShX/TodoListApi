@@ -18,5 +18,6 @@ namespace TodoListApi.Controllers
         {
             return Ok(userServices.GetUsers());
         }
+
     }
 }

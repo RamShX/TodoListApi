@@ -29,7 +29,7 @@ namespace TodoListApi
 
             var app = builder.Build();
 
-            //Test-Connection
+            //Test de conección a la base de datos
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
