@@ -1,15 +1,15 @@
 ﻿namespace TodoListApi.Models
 {
-    public class Tasks
+    public class Task
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public Status TaskStatus { get; set; } = Status.Peding;
+        public Status TaskStatus { get; set; } = Status.Pending;
         public int UserId { get; set; }
         public enum Status
         {
-            Peding = 1,
-            InProgress = 2,
+            Pending = 1,
+            InProcess = 2,
             Done = 3,
             Canceled = 4
         }

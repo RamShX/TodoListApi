@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using TodoListApi.Context;
+
 namespace TodoListApi
 {
     public class Program
@@ -13,8 +16,31 @@ namespace TodoListApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
+            builder.Services.AddControllers();
+            builder.Services.AddDbContext<TodoListContext> (options => options.UseMySQL(builder.Configuration.GetConnectionString("appDBConnection"))
+            );
 
             var app = builder.Build();
+
+            //Test-Connection
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<TodoListContext>();
+                    bool canConnect = context.Database.CanConnect();
+                    Console.WriteLine($"Conexión a la base de datos: {(canConnect ? "Exitosa": "Fallida")}");
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine($"Error al conectar a la base de datos: {e.Message}");
+                }
+                
+
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

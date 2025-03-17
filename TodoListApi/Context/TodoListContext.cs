@@ -7,7 +7,7 @@ namespace TodoListApi.Context
     {
         public TodoListContext(DbContextOptions<TodoListContext> dbContext) : base(dbContext) {}
 
-        public DbSet<Tasks> Tasks { get; set; }
+        public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }
