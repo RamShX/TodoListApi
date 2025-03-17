@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using TodoListApi.Context;
+using TodoListApi.Interfeces;
+using TodoListApi.Services;
 
 namespace TodoListApi
 {
@@ -20,6 +22,9 @@ namespace TodoListApi
             builder.Services.AddControllers();
             builder.Services.AddDbContext<TodoListContext> (options => options.UseMySQL(builder.Configuration.GetConnectionString("appDBConnection"))
             );
+
+            builder.Services.AddScoped<IUser, UserService>();
+            builder.Services.AddScoped<ITask, TaskService>();
 
             var app = builder.Build();
 
