@@ -1,4 +1,4 @@
-namespace TodoListApi
+namespace TodoListApi.Models
 {
     public class WeatherForecast
     {

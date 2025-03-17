@@ -1,6 +1,8 @@
-﻿namespace TodoListApi.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace TodoListApi.Controllers
 {
-    public class TaskController
+    public class TaskController : ControllerBase
     {
     }
 }
