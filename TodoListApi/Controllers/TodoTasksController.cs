@@ -5,7 +5,7 @@ using TodoListApi.Models;
 namespace TodoListApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tasks")]
     public class TodoTasksController : ControllerBase
     {
         private ITask taskServices;
@@ -15,16 +15,24 @@ namespace TodoListApi.Controllers
             this.taskServices = task;
         }
 
-        [HttpGet("GetTasks")]
-        public IActionResult Get()
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            return Ok(taskServices.GetTasks());
+            var tasks = taskServices.GetTasks();
+            if (tasks == null || !tasks.Any())
+                return NotFound(new { message = "No se encontraron tareas." });
+            return Ok(new {message = "Tareas obtenidas con éxito", data = tasks});
         }
 
-        [HttpGet("GetTaskByUserId/{UserId}")]
+        [HttpGet("user/{UserId}")]
         public IActionResult GetByUserId(int UserId)
         {
-            return Ok(taskServices.GetTaskByIdUser(UserId));
+            var tasksUser = taskServices.GetTaskByIdUser(UserId);
+            
+            if(tasksUser == null || !tasksUser.Any())
+                return NotFound(new { message = "No se encontraron tareas para este usuario." });
+
+            return Ok(new {message = $"Tareas obtenidas de este usuario {tasksUser} fue éxitoso", data = tasksUser });
         }
 
         [HttpGet("{id}")]
@@ -33,31 +41,35 @@ namespace TodoListApi.Controllers
             var task = taskServices.GetTaskById(id);
             if (task == null)
             {
-                return NotFound();
+                return NotFound(new {message = $"Tarea con {id} no fue encontrado."});
             }
 
-            return Ok(task);
+            return Ok(new {message = $"Tarea recuperada correctamente!!", data = task});
         }
 
-        [HttpPost("CreateTask")]
+        [HttpPost]
         public IActionResult Create([FromBody] TodoTasks task)
         {
             var CreatedTask = taskServices.CreateTask(task);
-            return CreatedAtAction(nameof(GetById), new { id = CreatedTask.Id }, CreatedTask);
+            return CreatedAtAction(nameof(GetById), new { id = CreatedTask.Id }, new
+            {
+                message = "La tarea se creó correctamente",
+                data = CreatedTask
+            });
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] TodoTasks task)
         {
             if (id != task.Id)
-                return BadRequest();
+                return BadRequest(new { message = $"La tarea hay un desajuste de {id}"});
           
             var UpdatedTask = taskServices.UpdateTask(task);
 
             if (UpdatedTask == null)
-                return NotFound();
-            
-            return Ok(UpdatedTask);
+                return NotFound(new { message = $"Tarea con el {id} no fue encontrado o ya está eliminado para ser actualizado." });
+
+            return Ok(new {message = $"La tarea se actualizó correctamente!!", data = UpdatedTask});
         }
 
         [HttpDelete("{id}")]
@@ -66,9 +78,9 @@ namespace TodoListApi.Controllers
             var result = taskServices.DeleteTask(id);
 
             if (!result)
-                return NoContent();
+                return NotFound(new {message = $"Tarea con el {id} no fue encontrado o ya está eliminado."});
             
-            return NotFound();
+            return Ok(new {message = $"La tarae con {id} fue eliminada correctamente!! "});
         }
     }
 }
