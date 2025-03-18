@@ -5,8 +5,8 @@ namespace TodoListApi.Interfeces
 {
     public interface IAuthService
     {
-        Task<UserRegisterDto> UserRegister(UserRegisterDto userDto);
-        Task<UserLoginDto> UserLogin(UserLoginDto userDto);
+        Task<User> UserRegister(UserRegisterDto userRegisterDto);
+        Task<User>UserLogin(UserLoginDto userLoginDto);
         bool VerifyPasswordHash(string password, string storedHash);
     }
 }
