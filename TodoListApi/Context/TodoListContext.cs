@@ -16,6 +16,10 @@ namespace TodoListApi.Context
             // Especificar los nombres de las tablas
             modelBuilder.Entity<TodoTasks>().ToTable("TodoTasks");
             modelBuilder.Entity<User>().ToTable("Users");
+
+            //Configuración de las propiedades
+            modelBuilder.Entity<TodoTasks>().Property(t => t.TaskStatus)
+                .HasConversion<string>();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace TodoListApi.Models
 {
@@ -10,15 +12,21 @@ namespace TodoListApi.Models
         [MaxLength(120)]
         public string Title { get; set; } = string.Empty;
         [MaxLength(500)]
-        public string Description { get; set; } = string.Empty;
+        public string DescriptionT { get; set; } = string.Empty;
+        //Convierte el enum a string en JSON
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status TaskStatus { get; set; } = Status.Pending;
         public int UserId { get; set; }
         public enum Status
         {
-            Pending = 1,
-            InProcess = 2,
-            Done = 3,
-            Canceled = 4
+            [EnumMember(Value = "Pending")]
+            Pending,
+            [EnumMember(Value = "InProcess")]
+            InProcess,
+            [EnumMember(Value = "Done")]
+            Done,
+            [EnumMember(Value = "Canceled")]
+            Canceled
         }
     }
 }
