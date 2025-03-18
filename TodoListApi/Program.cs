@@ -24,6 +24,7 @@ namespace TodoListApi
             builder.Services.AddDbContext<TodoListContext> (options => options.UseMySQL(builder.Configuration.GetConnectionString("appDBConnection"))
             );
 
+            //Inyectar las dependencias
             builder.Services.AddScoped<ITask, TodoTaskService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 
