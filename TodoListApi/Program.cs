@@ -28,6 +28,17 @@ namespace TodoListApi
             builder.Services.AddScoped<ITask, TodoTaskService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 
+            //Configuración de CORS para permitir peticiones desde cualquier origen
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
             //Test de conección a la base de datos
@@ -60,7 +71,7 @@ namespace TodoListApi
 
             app.UseAuthorization();
 
-
+            app.UseCors("AllowAll");
             app.MapControllers();
 
             app.Run();

@@ -50,6 +50,9 @@ namespace TodoListApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] TodoTasks task)
         {
+            if(string.IsNullOrWhiteSpace(task.Title))
+                return BadRequest(new { message = "El título de la tarea es requerido." });
+
             var CreatedTask = taskServices.CreateTask(task);
             return CreatedAtAction(nameof(GetById), new { id = CreatedTask.Id }, new
             {
@@ -63,24 +66,33 @@ namespace TodoListApi.Controllers
         {
             if (id != task.Id)
                 return BadRequest(new { message = $"La tarea hay un desajuste de {id}"});
-          
-            var UpdatedTask = taskServices.UpdateTask(task);
 
-            if (UpdatedTask == null)
-                return NotFound(new { message = $"Tarea con el {id} no fue encontrado o ya está eliminado para ser actualizado." });
+            if (!Enum.IsDefined(typeof(TodoTasks.Status), task.TaskStatus))
+                return BadRequest(new { message = "El estado de la tarea no es válido." });
 
-            return Ok(new {message = $"La tarea se actualizó correctamente!!", data = UpdatedTask});
+            try
+            {
+                var updatedTask = taskServices.UpdateTask(task);
+                return Ok(new { message = "Tarea actualizada correctamente", data = updatedTask });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var result = taskServices.DeleteTask(id);
-
-            if (!result)
-                return NotFound(new {message = $"Tarea con el {id} no fue encontrado o ya está eliminado."});
-            
-            return Ok(new {message = $"La tarae con {id} fue eliminada correctamente!! "});
+            try
+            {
+                taskServices.DeleteTask(id);
+                return Ok(new { message = $"Tarea con ID {id} eliminada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

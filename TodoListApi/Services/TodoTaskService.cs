@@ -24,7 +24,7 @@ namespace TodoListApi.Services
         {
             var task = _context.Tasks.Find(id);
             if (task == null)
-                return false;
+                throw new KeyNotFoundException($"La tarea con ID {id} no existe o ya fue eliminada.");
 
             _context.Tasks.Remove(task);
             return _context.SaveChanges() > 0;
@@ -52,7 +52,7 @@ namespace TodoListApi.Services
             var existingTask = _context.Tasks.Find(task.Id);
 
             if (existingTask == null)
-                return null;
+                throw new KeyNotFoundException($"La tarea con ID {task.Id} no fue encontrada.");
 
             _context.Entry(existingTask).CurrentValues.SetValues(task);
             _context.SaveChanges();
